@@ -5,7 +5,8 @@ import com.parkit.parkingsystem.model.Ticket;
 
 public class FareCalculatorService {
 
-    public void calculateFare(Ticket ticket) {
+    // Méthode principale modifiée pour accepter le paramètre discount
+    public void calculateFare(Ticket ticket, boolean discount) {
         // Vérification de la validité des horaires d'entrée et de sortie
         if ((ticket.getOutTime() == null) || (ticket.getOutTime().before(ticket.getInTime()))) {
             throw new IllegalArgumentException("Out time provided is incorrect: " + ticket.getOutTime());
@@ -39,7 +40,18 @@ public class FareCalculatorService {
                 ticket.setPrice(durationInHours * Fare.BIKE_RATE_PER_HOUR);
                 break;
             default:
-                throw new IllegalArgumentException("Unknown Parking");
+                throw new IllegalArgumentException("Unknown Parking Type");
         }
+
+        // Appliquer la réduction de 5% si discount est vrai
+        if (discount) {
+            ticket.setPrice(ticket.getPrice() * 0.95);  // Réduction de 5%
+        }
+    }
+
+    // Méthode sans le paramètre discount, appelant la méthode principale avec discount à false
+    public void calculateFare(Ticket ticket) {
+        // Appel de la méthode principale avec discount à false (pas de réduction)
+        calculateFare(ticket, false);
     }
 }

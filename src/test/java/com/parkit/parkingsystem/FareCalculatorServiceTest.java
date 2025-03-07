@@ -289,6 +289,45 @@ public class FareCalculatorServiceTest {
         // THEN : Le prix doit être 0
         assertEquals(0, ticket.getPrice());
     }
+
+    @Test
+    public void calculateFareCarWithDiscount() {
+        // GIVEN : Un ticket pour une voiture avec une durée de stationnement supérieure à 30 minutes et une réduction
+        Ticket ticket = new Ticket();
+        Date inTime = new Date();
+        inTime.setTime(System.currentTimeMillis() - (2 * 60 * 60 * 1000)); // 2 heures avant maintenant
+        Date outTime = new Date();
+
+        ticket.setInTime(inTime);
+        ticket.setOutTime(outTime);
+        ticket.setParkingSpot(new ParkingSpot(1, ParkingType.CAR, false));
+        
+        // WHEN : Calcul du prix du parking avec réduction
+        fareCalculatorService.calculateFare(ticket, true);
+
+        // THEN : Le prix doit être 95% du tarif plein pour une voiture
+        assertEquals(0.95 * Fare.CAR_RATE_PER_HOUR * 2, ticket.getPrice(), 0.01); // 2 heures à tarif plein
+    }
+
     
+    @Test
+    public void calculateFareBikeWithDiscount() {
+        // GIVEN : Un ticket pour une moto avec une durée de stationnement supérieure à 30 minutes et une réduction
+        Ticket ticket = new Ticket();
+        Date inTime = new Date();
+        inTime.setTime(System.currentTimeMillis() - (1 * 60 * 60 * 1000)); // 1 heure avant maintenant
+        Date outTime = new Date();
+
+        ticket.setInTime(inTime);
+        ticket.setOutTime(outTime);
+        ticket.setParkingSpot(new ParkingSpot(2, ParkingType.BIKE, false));
+        
+        // WHEN : Calcul du prix du parking avec réduction
+        fareCalculatorService.calculateFare(ticket, true);
+
+        // THEN : Le prix doit être 95% du tarif plein pour une moto
+        assertEquals(0.95 * Fare.BIKE_RATE_PER_HOUR, ticket.getPrice(), 0.01); // 1 heure à tarif plein
+    }
+ 
 }
 
