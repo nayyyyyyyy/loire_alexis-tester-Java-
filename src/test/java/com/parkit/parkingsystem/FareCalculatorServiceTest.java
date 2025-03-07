@@ -251,6 +251,44 @@ public class FareCalculatorServiceTest {
         fareCalculatorService.calculateFare(ticket);
         assertEquals( (24 * Fare.CAR_RATE_PER_HOUR) , ticket.getPrice());
     }
+    
+    @Test
+    public void calculateFareCarWithLessThan30minutesParkingTime() {
+        // GIVEN : Un ticket pour une voiture avec moins de 30 min de stationnement
+        Ticket ticket = new Ticket();
+        Date inTime = new Date();
+        inTime.setTime(System.currentTimeMillis() - (25 * 60 * 1000)); // 25 minutes avant maintenant
+        Date outTime = new Date();
+        
+        ticket.setInTime(inTime);
+        ticket.setOutTime(outTime);
+        ticket.setParkingSpot(new ParkingSpot(1, ParkingType.CAR, false));
 
+        // WHEN : Calcul du prix du parking
+        fareCalculatorService.calculateFare(ticket);
+        
+        // THEN : Le prix doit être 0
+        assertEquals(0, ticket.getPrice());
+    }
+
+    @Test
+    public void calculateFareBikeWithLessThan30minutesParkingTime() {
+        // GIVEN : Un ticket pour une moto avec moins de 30 min de stationnement
+        Ticket ticket = new Ticket();
+        Date inTime = new Date();
+        inTime.setTime(System.currentTimeMillis() - (20 * 60 * 1000)); // 20 minutes avant maintenant
+        Date outTime = new Date();
+        
+        ticket.setInTime(inTime);
+        ticket.setOutTime(outTime);
+        ticket.setParkingSpot(new ParkingSpot(2, ParkingType.BIKE, false));
+
+        // WHEN : Calcul du prix du parking
+        fareCalculatorService.calculateFare(ticket);
+        
+        // THEN : Le prix doit être 0
+        assertEquals(0, ticket.getPrice());
+    }
+    
 }
 
