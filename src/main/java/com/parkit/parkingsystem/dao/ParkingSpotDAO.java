@@ -56,4 +56,9 @@ public class ParkingSpotDAO {
         }
     }
 
+	public ParkingSpot getParkingSpot(ParkingSpot parkingSpot) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

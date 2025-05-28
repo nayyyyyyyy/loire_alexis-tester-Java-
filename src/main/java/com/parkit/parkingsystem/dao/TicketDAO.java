@@ -107,4 +107,9 @@ public class TicketDAO {
         }
         return count;
     }
+
+	public Object getTicketByVehicleRegNumber(String string) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
